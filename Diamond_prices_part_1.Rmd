@@ -1,0 +1,151 @@
+---
+title: "Diamond Prices Part 1"
+author: "Audrey Ekuban"
+date: "6 March 2016"
+output: word_document
+---
+
+```{r}
+library(ggplot2)
+data("diamonds")
+summary(diamonds)
+str(diamonds)
+#?diamonds
+```
+
+![Figure1](figure_1.png)
+
+```{r}
+ggplot(aes(x = price), data = diamonds) + 
+  geom_histogram(binwidth = 500, aes(x=diamonds$price)) +
+  ggtitle("Diamond Price Histogram") + 
+  xlab("Diamond Price U$") + 
+  ylab("Frequency")
+```
+
+Plot is long tailed.
+
+```{r}
+summary(diamonds$price)
+mean(diamonds$price)
+median(diamonds$price)
+```
+
+```{r}
+sum(diamonds$price < 500)
+sum(diamonds$price < 250)
+sum(diamonds$price >= 15000)
+```
+
+```{r}
+ggplot(aes(x = price), data = diamonds) + 
+  geom_histogram(binwidth = 125, aes(x=diamonds$price)) +
+  ggtitle("Diamond Price Histogram") + 
+  xlab("Diamond Price U$") + 
+  ylab("Frequency") +
+  xlim(0,1250) +
+  scale_x_continuous(limits = c(0, 1250), breaks = seq(0, 1250, 125))
+
+ggplot(aes(x = price), data = diamonds) + 
+  geom_histogram(binwidth = 85, aes(x=diamonds$price)) +
+  ggtitle("Diamond Price Histogram") + 
+  xlab("Diamond Price U$") + 
+  ylab("Frequency") +
+  xlim(0,850) +
+  scale_x_continuous(limits = c(0, 850), breaks = seq(0, 850, 85))
+
+
+ggplot(aes(x = price), data = diamonds) + 
+  geom_histogram(binwidth = 10, aes(x=diamonds$price)) +
+  ggtitle("Diamond Price Histogram") + 
+  xlab("Diamond Price U$") + 
+  ylab("Frequency") +
+  xlim(0,850) +
+  scale_x_continuous(limits = c(0, 850), breaks = seq(0, 850, 100))
+
+```
+
+```{r}
+sum(diamonds$price < 500)
+sum(diamonds$price < 250)
+sum(diamonds$price >= 15000)
+```
+
+```{r}
+ggplot(data=diamonds) + geom_histogram(binwidth=500, aes(x=diamonds$price)) + 
+  ggtitle("Diamond Price Histogram by Cut") + xlab("Diamond Price U$") +
+  ylab("Frequency") + facet_wrap(~cut)
+
+```
+
+```{r}
+subset(diamonds, price == max(price))$cut
+subset(diamonds, price == min(price))$cut
+subset(diamonds, price == min(by(diamonds$price, diamonds$cut, median)))$cut
+
+```
+
+![Figure2](figure_2.png)
+
+```{r}
+qplot(x = price, data = diamonds) + 
+  facet_wrap(~cut, scales="free_y")
+```
+
+```{r}
+ggplot(aes(x = price), data = diamonds) + 
+  geom_histogram(binwidth = 0.05, aes(x=diamonds$price/diamonds$carat)) +
+  ggtitle("Diamond Price per Carat Histogram") + 
+  xlab("Diamond Price per Carat U$ - Log 10") + 
+  ylab("Frequency") +
+  facet_wrap(~cut, scales="free_y") + scale_x_log10()
+```
+
+```{r}
+ggplot(aes(factor(cut), price, fill=cut), data = diamonds) + 
+  geom_boxplot() +
+  ggtitle("Diamond Price / Cut Box Plot") + 
+  xlab("Cut") + 
+  ylab("Frequency") +
+  coord_cartesian(ylim=c(0,20000))
+```
+
+```{r}
+quantile(subset(diamonds, color == 'D')$price)
+quantile(subset(diamonds, color == 'J')$price)
+
+IQR(subset(diamonds, color == 'D')$price)
+IQR(subset(diamonds, color == 'J')$price)
+```
+
+![Figure3](figure_3.png)
+
+```{r}
+ggplot(aes(factor(color), price/carat, fill=color), data = diamonds) + 
+  geom_boxplot() +
+  ggtitle("Diamond Price per Carat / Color Box Plot") + 
+  xlab("Color") + 
+  ylab("Frequency") +
+  coord_cartesian(ylim=c(0,15000))
+```
+
+```{r}
+ggplot(aes(x = carat), data = diamonds) + 
+  geom_freqpoly(binwidth = 0.01) +
+  ggtitle("Diamond Carat Frequency") + 
+  xlab("Diamond Carat") + 
+  ylab("Count") +
+  xlim(0,2) +
+  scale_x_continuous(limits = c(0, 2), breaks = seq(0, 2, 0.1))
+
+ggplot(aes(x = carat), data = diamonds) + 
+  geom_freqpoly(binwidth = 0.01) +
+  ggtitle("Diamond Carat Frequency") + 
+  xlab("Diamond Carat") + 
+  ylab("Count") +
+  xlim(0,1.02) +
+  scale_x_continuous(limits = c(0, 1.02), breaks = seq(0, 1.1, 0.05))
+
+```
+
+![Figure4](figure_4.png)
